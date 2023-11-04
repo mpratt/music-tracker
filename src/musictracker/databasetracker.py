@@ -32,7 +32,7 @@ class DatabaseTracker:
         self.db.commit()
 
     def get_trending(self, days):
-        return self.db.execute('SELECT path, COUNT(*), date_played FROM plays WHERE date_played >= DATETIME("now", "-' + days + ' days", "localtime") AND COUNT(*) > 2 GROUP BY "path" ORDER BY COUNT(*) DESC LIMIT 100').fetchall()
+        return self.db.execute('SELECT path, COUNT(*) as total, date_played FROM plays WHERE date_played >= DATETIME("now", "-' + days + ' days", "localtime") GROUP BY "path" ORDER BY total DESC LIMIT 100').fetchall()
 
     def get_top(self, total):
         return self.db.execute('SELECT path, artist, track FROM tracks ORDER BY total DESC LIMIT ?', (total,)).fetchall()
