@@ -15,6 +15,11 @@ class DatabaseTracker:
         self.db.execute('CREATE TABLE IF NOT EXISTS tracks (path text, artist text, track text, total integer)')
         self.db.execute('CREATE TABLE IF NOT EXISTS plays (path text, date_played datetime)')
 
+    def recalculate(self):
+        rows = self.db.execute('SELECT path, COUNT(*) as total FROM plays GROUP BY "path" ORDER BY total DESC').fetchall()
+        for row in rows:
+            self.db.execute('UPDATE tracks SET total = ? WHERE path = ?', (row[1], row[0]))
+
     def add_track(self, path, artist, track):
         path = self.clean_path(path)
         file = self.get_file(path)

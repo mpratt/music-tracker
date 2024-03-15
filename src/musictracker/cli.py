@@ -22,6 +22,7 @@ def run():
     parser.add_argument('--purge')
     parser.add_argument('--verbose')
     parser.add_argument('--skip-tracking')
+    parser.add_argument('--recalculate')
     args = parser.parse_args()
 
     now = datetime.now()
@@ -29,6 +30,11 @@ def run():
 
     for arg, value in sorted(vars(args).items()):
         log_info(args.verbose, "Script Arguments: {} - {}".format(arg, value))
+
+    if args.recalculate:
+        print('Recalculating stats...')
+        database.recalculate()
+        return
 
     if args.export_top or args.trending:
         if args.trending:
